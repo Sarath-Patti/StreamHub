@@ -2,6 +2,7 @@ import { authResolvers } from '@/modules/auth/graphql/resolvers';
 import { catalogResolvers } from '@/modules/catalog/graphql/resolvers';
 import { watchlistResolvers } from '@/modules/watchlist/graphql/resolvers';
 import { reviewsResolvers } from '@/modules/reviews/graphql/resolvers';
+import { searchResolvers } from '@/modules/search/graphql/resolvers';
 
 const baseResolvers = {
   Query: {
@@ -16,6 +17,7 @@ export const resolvers = {
     ...catalogResolvers.Query,
     ...watchlistResolvers.Query,
     ...reviewsResolvers.Query,
+    ...searchResolvers.Query,
   },
   Mutation: {
     ...authResolvers.Mutation,
