@@ -11,6 +11,27 @@ jobs:
     name: Backend CI (Lint, Build, Test)
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: streamhub
+          POSTGRES_PASSWORD: streamhubpassword
+          POSTGRES_DB: streamhub_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://streamhub:streamhubpassword@localhost:5432/streamhub_test?schema=public
+      NODE_ENV: test
+      JWT_SECRET: testsecretjwtaccesskey
+      JWT_REFRESH_SECRET: testsecretjwtrefreshkey
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -29,6 +50,10 @@ jobs:
       - name: Generate Prisma Client
         working-directory: ./backend
         run: npx prisma generate
+
+      - name: Push Database Schema
+        working-directory: ./backend
+        run: npx prisma db push --accept-data-loss
 
       - name: Lint Backend
         working-directory: ./backend
