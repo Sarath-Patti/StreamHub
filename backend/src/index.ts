@@ -3,10 +3,17 @@ import cors from 'cors';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { config } from '@/config/env';
-import { typeDefs } from '@/graphql/schema';
-import { resolvers } from '@/graphql/resolvers';
-import { logger } from '@/logger';
-import { globalErrorHandler } from '@/middleware/errorHandler';
+import { typeDefs } from '@/graphql/schema/index';
+import { resolvers } from '@/graphql/resolvers/index';
+import { createContext } from '@/graphql/context/index';
+import { logger } from '@/shared/logger';
+import {
+  requestIdMiddleware,
+  requestLoggerMiddleware,
+  authPlaceholderMiddleware,
+  globalErrorHandlerMiddleware,
+} from '@/shared/middleware';
+import { formatGraphQLError } from '@/shared/errors';
 import healthRouter from '@/routes/health';
 
 async function startServer() {
@@ -15,21 +22,31 @@ async function startServer() {
   app.use(cors());
   app.use(express.json());
 
+  app.use(requestIdMiddleware);
+  app.use(requestLoggerMiddleware);
+  app.use(authPlaceholderMiddleware);
+
   app.use('/api', healthRouter);
 
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    formatError: formatGraphQLError,
   });
 
   await server.start();
 
-  app.use('/graphql', expressMiddleware(server));
+  app.use(
+    '/graphql',
+    expressMiddleware(server, {
+      context: createContext,
+    })
+  );
 
-  app.use(globalErrorHandler);
+  app.use(globalErrorHandlerMiddleware);
 
   app.listen(config.port, () => {
-    logger.info(`Backend server running on port ${config.port}`);
+    logger.info(`Backend server running on port ${config.port} (${config.nodeEnv})`);
     logger.info(`GraphQL endpoint ready at http://localhost:${config.port}/graphql`);
   });
 }

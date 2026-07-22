@@ -1,5 +1,1 @@
-export const typeDefs = `#graphql
-  type Query {
-    status: String!
-  }
-`;
+export * from './schema/index';
