@@ -1,7 +1,17 @@
-import { GraphQLContext } from '../context';
+import { authResolvers } from '@/modules/auth/graphql/resolvers';
+
+const baseResolvers = {
+  Query: {
+    status: () => 'StreamHub initialized.',
+  },
+};
 
 export const resolvers = {
   Query: {
-    status: (_parent: unknown, _args: unknown, _context: GraphQLContext) => 'StreamHub initialized.',
+    ...baseResolvers.Query,
+    ...authResolvers.Query,
+  },
+  Mutation: {
+    ...authResolvers.Mutation,
   },
 };

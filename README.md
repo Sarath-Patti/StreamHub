@@ -2,17 +2,21 @@
 
 Production-ready foundation for a modern full-stack streaming platform.
 
-## Engineering Foundation
+## Architecture & Authentication
 
-StreamHub follows clean engineering practices:
+StreamHub features a clean modular architecture and robust authentication system:
 
+- **Modular Architecture**: Feature modules encapsulated under `backend/src/modules/` (`auth`, etc.).
+- **Authentication**: JWT access and refresh token authentication with bcrypt password hashing.
 - **Structured Logging**: Powered by Pino with request ID tracing.
 - **Environment & Input Validation**: Powered by Zod with fail-fast startup checks.
 - **Centralized Error System**: Standardized application error hierarchy and sanitized GraphQL error responses.
-- **Request Lifecycle**: Express middleware pipeline for Request ID, logging, auth context preparation, and global error handling.
 - **Testing Infrastructure**: Configured with Vitest for unit and integration testing.
 
-For detailed documentation, see [docs/engineering.md](docs/engineering.md) and [docs/architecture.md](docs/architecture.md).
+For detailed documentation, see:
+- [docs/authentication.md](docs/authentication.md)
+- [docs/engineering.md](docs/engineering.md)
+- [docs/architecture.md](docs/architecture.md)
 
 ## Data Flow Architecture
 
@@ -53,9 +57,15 @@ npm run dev
 ```
 streamhub/
 ├── frontend/             # React 19 + Vite + TypeScript + Tailwind CSS
-├── backend/              # Express + Apollo Server + Prisma ORM + Pino + Zod
-├── shared/               # Shared constants, types, errors, validation, and logger
-├── docs/                 # Architectural & engineering documentation
+├── backend/              # Express + Apollo Server + Prisma ORM + Pino + Zod + JWT
+│   ├── src/
+│   │   ├── config/       # Configuration & env validation
+│   │   ├── graphql/      # GraphQL context & resolvers
+│   │   ├── modules/      # Domain modules (auth, etc.)
+│   │   ├── shared/       # Single source of truth for reusable infrastructure
+│   │   └── server.ts     # Express/Apollo server startup
+│   └── tests/            # Integration & unit test suites
+├── docs/                 # Architectural, engineering & auth documentation
 ├── docker/               # Container configurations
 ├── scripts/              # Build and utility scripts
 ├── .github/workflows/    # CI/CD workflows

@@ -1,39 +1,39 @@
 # StreamHub Engineering Foundation
 
-This document details the engineering principles, infrastructure, and standards established in milestone v0.2.
+This document details the engineering principles, infrastructure, and standards established across milestones v0.2 and v0.3.
 
-## Folder Structure
+## Backend Organization
 
-The repository organizes core features and shared infrastructure into distinct modules:
+The backend source is organized under `backend/src/`:
 
 ```
-streamhub/
-├── backend/
-│   ├── src/
-│   │   ├── config/          # Environment configuration & validation
-│   │   ├── graphql/         # GraphQL schema, resolvers, and context
-│   │   │   ├── context/     # Request-scoped context factory
-│   │   │   ├── resolvers/   # Query and mutation resolvers
-│   │   │   └── schema/      # Type definitions
-│   │   ├── routes/          # Express route handlers (e.g., health)
-│   │   ├── shared/          # Reusable shared infrastructure
-│   │   │   ├── constants/   # System-wide constants
-│   │   │   ├── errors/      # Application error hierarchy & formatters
-│   │   │   ├── logger/      # Pino logger configuration
-│   │   │   ├── middleware/  # Express middlewares
-│   │   │   ├── types/       # Shared TypeScript types
-│   │   │   ├── utils/       # Utility functions
-│   │   │   └── validation/  # Zod validation helpers
-│   │   └── index.ts         # Application entry point
-│   ├── tests/
-│   │   ├── unit/            # Unit tests
-│   │   └── integration/     # Integration & smoke tests
-│   └── vitest.config.ts     # Vitest test runner configuration
-├── frontend/                # React 19 + Vite frontend
-├── shared/                  # Root-level shared utilities
-├── docs/                    # Architectural & engineering documentation
-├── docker/                  # Docker container configs
-└── docker-compose.yml       # Multi-container orchestration
+backend/src/
+├── config/          # Environment configuration & Zod validation
+├── graphql/         # Application GraphQL setup (context, combined schema & resolvers)
+│   ├── context/     # GraphQL context factory
+│   ├── resolvers/   # Consolidated resolver tree
+│   └── schema/      # Consolidated schema definitions
+├── modules/         # Domain feature modules
+│   └── auth/        # Authentication feature module
+│       ├── graphql/ # Module-specific typeDefs and resolvers
+│       ├── repository/ # Prisma data access layer
+│       ├── service/ # Business logic & auth workflows
+│       ├── types/   # Module DTOs & TypeScript types
+│       └── validation/ # Zod validation schemas
+├── routes/          # Express route handlers (e.g. health)
+├── shared/          # Single source of truth for reusable infrastructure
+│   ├── constants/   # System-wide constants
+│   ├── errors/      # Application errors & error formatters
+│   ├── logger/      # Pino logger configuration
+│   ├── middleware/  # Single-responsibility Express middlewares
+│   │   ├── auth.ts          # Bearer JWT verification
+│   │   ├── errorHandler.ts  # Global error handler
+│   │   ├── requestId.ts     # X-Request-ID propagation
+│   │   └── requestLogger.ts # Request metric logger
+│   ├── types/       # Shared TypeScript types
+│   ├── utils/       # Common helper utilities
+│   └── validation/  # Zod validation helpers
+└── server.ts        # Express & Apollo Server factory and starter
 ```
 
 ## Logging
@@ -59,17 +59,15 @@ A centralized class hierarchy is implemented for application errors:
 - `InternalServerError`: For unhandled application errors (500 Internal Server Error).
 - **GraphQL Error Formatting**: `formatGraphQLError` sanitizes error responses to prevent internal stack traces or database details from leaking to clients in production environments.
 
-## Request Lifecycle
+## Testing Infrastructure
 
-Express middleware manages HTTP request lifecycle in a structured pipeline:
-1. **Request ID Middleware**: Generates or propagates `X-Request-ID` headers and attaches child logger instances to `req`.
-2. **Request Logger Middleware**: Tracks HTTP request completion metrics (method, URL, status code, duration).
-3. **Auth Placeholder Middleware**: Prepares request context for future authentication without executing auth logic.
-4. **Global Error Handler Middleware**: Catches unhandled errors and formats clean, standardized JSON error responses.
+Tests are organized into structured directories:
 
-## GraphQL Organization
-
-GraphQL infrastructure is organized into dedicated submodules:
-- `graphql/schema/`: Schema type definitions (`typeDefs`).
-- `graphql/resolvers/`: Query and field resolution logic.
-- `graphql/context/`: Context factory generating request-scoped context (`GraphQLContext`).
+```
+tests/
+├── integration/
+│   ├── auth/       # Authentication integration tests
+│   └── health/     # Health check smoke tests
+└── unit/
+    └── auth/       # Unit tests for password hashing, tokens, and services
+```

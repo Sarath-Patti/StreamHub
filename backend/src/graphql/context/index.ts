@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import { Logger, logger as defaultLogger } from '@/shared/logger';
+import { AuthUser, ExtendedRequest } from '@/shared/types';
 
 export interface GraphQLContext {
   req: Request;
   res: Response;
   requestId?: string;
   logger: Logger;
-  user?: null;
+  user: AuthUser | null;
 }
 
 export const createContext = async ({
@@ -16,12 +17,12 @@ export const createContext = async ({
   req: Request;
   res: Response;
 }): Promise<GraphQLContext> => {
-  const extendedReq = req as Request & { id?: string; logger?: Logger };
+  const extendedReq = req as ExtendedRequest;
   return {
     req,
     res,
     requestId: extendedReq.id,
     logger: extendedReq.logger || defaultLogger,
-    user: null,
+    user: extendedReq.user || null,
   };
 };
