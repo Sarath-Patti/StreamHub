@@ -27,6 +27,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   watchlists Watchlist[]
+  reviews    Review[]
 }
 
 model Content {
@@ -47,6 +48,7 @@ model Content {
   genres      Genre[]     @relation("ContentGenres")
   seasons     Season[]
   watchlists  Watchlist[]
+  reviews     Review[]
 }
 
 model Genre {
@@ -89,6 +91,20 @@ model Watchlist {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   contentId String
   content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, contentId])
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentId String
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  rating    Int
+  review    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

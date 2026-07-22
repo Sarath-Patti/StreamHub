@@ -1,6 +1,6 @@
 # StreamHub Engineering Foundation
 
-This document details the engineering principles, infrastructure, and standards established across milestones v0.2 through v0.5.
+This document details the engineering principles, infrastructure, and standards established across milestones v0.2 through v0.6.
 
 ## Backend Organization
 
@@ -16,11 +16,12 @@ backend/src/
 ├── modules/         # Domain feature modules
 │   ├── auth/        # Authentication feature module
 │   ├── catalog/     # Content Catalog feature module
-│   └── watchlist/   # User Watchlist feature module
-│       ├── graphql/    # Watchlist schema definitions and resolvers
-│       ├── repository/ # Data access layer for Watchlist model
-│       ├── service/    # Business logic, duplicate prevention & pagination
-│       ├── types/      # Watchlist DTOs & TypeScript types
+│   ├── watchlist/   # User Watchlist feature module
+│   └── reviews/     # Content Reviews & Ratings feature module
+│       ├── graphql/    # Reviews schema definitions and resolvers
+│       ├── repository/ # Data access layer for Review model & aggregate metrics
+│       ├── service/    # Business logic, ratings calculation & ownership verification
+│       ├── types/      # Review DTOs & TypeScript types
 │       └── validation/ # Zod validation schemas
 ├── routes/          # Express route handlers (e.g. health)
 ├── shared/          # Single source of truth for reusable infrastructure
@@ -44,9 +45,11 @@ tests/
 │   ├── auth/       # Authentication integration tests
 │   ├── catalog/    # Catalog GraphQL integration tests
 │   ├── health/     # Health check smoke tests
-│   └── watchlist/  # Watchlist integration & authorization tests
+│   ├── watchlist/  # Watchlist integration tests
+│   └── reviews/    # Reviews & ratings GraphQL integration tests
 └── unit/
     ├── auth/       # Unit tests for password hashing, tokens, and services
     ├── catalog/    # Unit tests for catalog service & pagination
-    └── watchlist/  # Unit tests for watchlist service & duplicate prevention
+    ├── watchlist/  # Unit tests for watchlist service & duplicate prevention
+    └── reviews/    # Unit tests for reviews service, ratings & ownership
 ```

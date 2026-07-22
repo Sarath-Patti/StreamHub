@@ -9,12 +9,14 @@ StreamHub features a clean modular architecture:
 - **Authentication Module**: JWT access and refresh token authentication with bcrypt password hashing.
 - **Content Catalog Module**: Comprehensive catalog management for Movies, TV Series, Seasons, Episodes, and Genres with pagination, search, and trending filters.
 - **Watchlist Module**: Personal watchlist management for authenticated users with duplicate prevention, pagination, and sorting.
+- **Reviews & Ratings Module**: Content reviews and ratings (1–5 stars) with duplicate prevention, user ownership verification, average rating calculation, and star distribution metrics.
 - **Structured Logging**: Powered by Pino with request ID tracing.
 - **Environment & Input Validation**: Powered by Zod with fail-fast startup checks.
 - **Centralized Error System**: Standardized application error hierarchy and sanitized GraphQL error responses.
 - **Testing Infrastructure**: Configured with Vitest for unit and integration testing.
 
 For detailed documentation, see:
+- [docs/reviews.md](docs/reviews.md)
 - [docs/watchlist.md](docs/watchlist.md)
 - [docs/catalog.md](docs/catalog.md)
 - [docs/authentication.md](docs/authentication.md)
@@ -71,12 +73,12 @@ streamhub/
 │   ├── src/
 │   │   ├── config/       # Configuration & env validation
 │   │   ├── graphql/      # GraphQL context & resolvers
-│   │   ├── modules/      # Domain modules (auth, catalog, watchlist, etc.)
+│   │   ├── modules/      # Domain modules (auth, catalog, watchlist, reviews, etc.)
 │   │   ├── shared/       # Single source of truth for reusable infrastructure
 │   │   └── server.ts     # Express/Apollo server startup
 │   ├── prisma/           # Prisma schema & seed script
 │   └── tests/            # Integration & unit test suites
-├── docs/                 # Architectural, engineering, auth, catalog & watchlist docs
+├── docs/                 # Architectural, engineering, auth, catalog, watchlist & reviews docs
 ├── docker/               # Container configurations
 ├── scripts/              # Build and utility scripts
 ├── .github/workflows/    # CI/CD workflows
