@@ -1,13 +1,62 @@
 # StreamHub
 
-Production-ready, high-performance full-stack streaming platform foundation.
+Production-ready, high-performance full-stack video streaming platform foundation.
 
 [![CI Workflow](https://github.com/Sarath-Patti/StreamHub/actions/workflows/ci.yml/badge.svg)](https://github.com/Sarath-Patti/StreamHub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+## Quick Start (One Command)
+
+```bash
+git clone https://github.com/Sarath-Patti/StreamHub.git
+cd StreamHub
+docker compose up --build
+```
+
+Open your browser at **http://localhost:3000**
+
+- **Frontend App**: http://localhost:3000
+- **GraphQL Endpoint**: http://localhost:4000/graphql
+- **Health Check**: http://localhost:4000/api/health
+- **Readiness Check**: http://localhost:4000/api/ready
+
+---
+
+## Developer Workflows
+
+### Monorepo Scripts (Root)
+
+From the project root:
+
+```bash
+npm run dev        # Starts Frontend & Backend concurrently
+npm run build      # Builds Backend & Frontend
+npm run test       # Runs Backend test suite
+npm run lint       # Lints Backend & Frontend code
+npm run docker     # Runs docker compose up --build
+npm run clean      # Cleans node_modules and build artifacts
+```
+
+### Local Development (Without Docker)
+
+1. **Start PostgreSQL**: Ensure PostgreSQL is running on port `5432` with database `streamhub`.
+2. **Setup Database**:
+   ```bash
+   cd backend
+   npx prisma db push
+   npx prisma db seed
+   ```
+3. **Run Application**:
+   ```bash
+   # From root directory
+   npm run dev
+   ```
+
+---
+
 ## Overview
 
-StreamHub is a production-grade full-stack video streaming architecture built with React 19, Vite, TypeScript, Express, Apollo Server (GraphQL), Prisma ORM, and PostgreSQL. It demonstrates clean modular architecture, security hardening, performance indexing, deterministic recommendation algorithms, and operational readiness.
+StreamHub is a production-grade full-stack video streaming architecture built with React 19, Vite, TypeScript, Express, Apollo Server (GraphQL), Prisma ORM, and PostgreSQL. It features clean modular architecture, security hardening, performance indexing, deterministic recommendation algorithms, and operational readiness.
 
 ## Technology Stack
 
@@ -37,75 +86,6 @@ For detailed architecture docs, see:
 - [docs/catalog.md](docs/catalog.md)
 - [docs/authentication.md](docs/authentication.md)
 - [CHANGELOG.md](CHANGELOG.md)
-
-## Data Flow Architecture
-
-```
-Frontend (React 19 + Vite) -> Apollo Client -> GraphQL API (Apollo Server + Express) -> Service Layer -> Repository Layer -> PostgreSQL (Prisma ORM)
-```
-
-## Quick Start with Docker
-
-Start the full production stack (Frontend, Backend, PostgreSQL):
-
-```bash
-docker-compose up --build
-```
-
-Access endpoints:
-- **Frontend App**: http://localhost:3000
-- **GraphQL Endpoint**: http://localhost:4000/graphql
-- **Health Probe**: http://localhost:4000/api/health
-- **Readiness Probe**: http://localhost:4000/api/ready
-
-## Local Development Workflow
-
-### 1. Database Setup & Seeding
-
-```bash
-cd backend
-npm install
-npx prisma generate
-npx prisma db seed
-```
-
-### 2. Backend Server
-
-```bash
-cd backend
-npm run dev
-```
-
-### 3. Frontend App
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Testing
-
-Run unit and integration test suites:
-
-```bash
-cd backend
-npm run test
-```
-
-Run linter and TypeScript compilation:
-
-```bash
-# Backend
-cd backend
-npm run lint
-npm run build
-
-# Frontend
-cd frontend
-npm run lint
-npm run build
-```
 
 ## Example GraphQL API Operations
 
