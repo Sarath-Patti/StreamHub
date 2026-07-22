@@ -4,6 +4,7 @@ import { watchlistTypeDefs } from '@/modules/watchlist/graphql/typeDefs';
 import { reviewsTypeDefs } from '@/modules/reviews/graphql/typeDefs';
 import { searchTypeDefs } from '@/modules/search/graphql/typeDefs';
 import { recommendationsTypeDefs } from '@/modules/recommendations/graphql/typeDefs';
+import { adminTypeDefs } from '@/modules/admin/graphql/typeDefs';
 
 const baseTypeDefs = `#graphql
   type Query {
@@ -23,4 +24,5 @@ export const typeDefs = [
   reviewsTypeDefs,
   searchTypeDefs,
   recommendationsTypeDefs,
+  adminTypeDefs,
 ];

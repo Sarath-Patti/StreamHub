@@ -1,6 +1,6 @@
 # StreamHub Engineering Foundation
 
-This document details the engineering principles, infrastructure, and standards established across milestones v0.2 through v0.8.
+This document details the engineering principles, infrastructure, and standards established across milestones v0.2 through v0.9.
 
 ## Backend Organization
 
@@ -19,11 +19,12 @@ backend/src/
 │   ├── watchlist/   # User Watchlist feature module
 │   ├── reviews/     # Content Reviews & Ratings feature module
 │   ├── search/      # Search & Discovery feature module
-│   └── recommendations/ # Recommendation Engine feature module
-│       ├── graphql/    # Recommendation schema definitions and resolvers
-│       ├── repository/ # Data access layer for deterministic scoring & ranking
-│       ├── service/    # Business logic, pagination metadata & strategy execution
-│       ├── types/      # Recommendation DTOs & TypeScript types
+│   ├── recommendations/ # Recommendation Engine feature module
+│   └── admin/       # Platform Administration feature module
+│       ├── graphql/    # Admin schema definitions and resolvers
+│       ├── repository/ # Data access layer for analytics, moderation & soft delete
+│       ├── service/    # Business logic, RBAC checks & bulk operations
+│       ├── types/      # Admin DTOs & TypeScript types
 │       └── validation/ # Zod validation schemas
 ├── routes/          # Express route handlers (e.g. health)
 ├── shared/          # Single source of truth for reusable infrastructure
@@ -50,12 +51,14 @@ tests/
 │   ├── watchlist/       # Watchlist integration tests
 │   ├── reviews/         # Reviews & ratings GraphQL integration tests
 │   ├── search/          # Search & discovery GraphQL integration tests
-│   └── recommendations/ # Recommendation GraphQL integration tests
+│   ├── recommendations/ # Recommendation GraphQL integration tests
+│   └── admin/           # Platform administration GraphQL & RBAC tests
 └── unit/
     ├── auth/            # Unit tests for password hashing, tokens, and services
     ├── catalog/         # Unit tests for catalog service & pagination
     ├── watchlist/       # Unit tests for watchlist service & duplicate prevention
     ├── reviews/         # Unit tests for reviews service, ratings & ownership
     ├── search/          # Unit tests for search service, filtering & metadata
-    └── recommendations/ # Unit tests for recommendation scoring strategies
+    ├── recommendations/ # Unit tests for recommendation scoring strategies
+    └── admin/           # Unit tests for RBAC, soft delete & moderation
 ```

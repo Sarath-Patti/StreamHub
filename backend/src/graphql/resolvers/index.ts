@@ -4,6 +4,7 @@ import { watchlistResolvers } from '@/modules/watchlist/graphql/resolvers';
 import { reviewsResolvers } from '@/modules/reviews/graphql/resolvers';
 import { searchResolvers } from '@/modules/search/graphql/resolvers';
 import { recommendationsResolvers } from '@/modules/recommendations/graphql/resolvers';
+import { adminResolvers } from '@/modules/admin/graphql/resolvers';
 
 const baseResolvers = {
   Query: {
@@ -20,11 +21,13 @@ export const resolvers = {
     ...reviewsResolvers.Query,
     ...searchResolvers.Query,
     ...recommendationsResolvers.Query,
+    ...adminResolvers.Query,
   },
   Mutation: {
     ...authResolvers.Mutation,
     ...catalogResolvers.Mutation,
     ...watchlistResolvers.Mutation,
     ...reviewsResolvers.Mutation,
+    ...adminResolvers.Mutation,
   },
 };
