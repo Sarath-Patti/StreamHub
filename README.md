@@ -11,12 +11,14 @@ StreamHub features a clean modular architecture:
 - **Watchlist Module**: Personal watchlist management for authenticated users with duplicate prevention, pagination, and sorting.
 - **Reviews & Ratings Module**: Content reviews and ratings (1–5 stars) with duplicate prevention, user ownership verification, average rating calculation, and star distribution metrics.
 - **Search & Discovery Module**: Advanced multi-criteria search, filtering (genre, type, language, year, min rating), sorting, and pagination with metadata.
+- **Recommendation Engine Module**: Deterministic content recommendations (Similar Content, Popular Content, Weighted Trending, Top Rated with minimum reviews, and Continue Discovering).
 - **Structured Logging**: Powered by Pino with request ID tracing.
 - **Environment & Input Validation**: Powered by Zod with fail-fast startup checks.
 - **Centralized Error System**: Standardized application error hierarchy and sanitized GraphQL error responses.
 - **Testing Infrastructure**: Configured with Vitest for unit and integration testing.
 
 For detailed documentation, see:
+- [docs/recommendations.md](docs/recommendations.md)
 - [docs/search.md](docs/search.md)
 - [docs/reviews.md](docs/reviews.md)
 - [docs/watchlist.md](docs/watchlist.md)
@@ -75,12 +77,12 @@ streamhub/
 │   ├── src/
 │   │   ├── config/       # Configuration & env validation
 │   │   ├── graphql/      # GraphQL context & resolvers
-│   │   ├── modules/      # Domain modules (auth, catalog, watchlist, reviews, search, etc.)
+│   │   ├── modules/      # Domain modules (auth, catalog, watchlist, reviews, search, recommendations)
 │   │   ├── shared/       # Single source of truth for reusable infrastructure
 │   │   └── server.ts     # Express/Apollo server startup
 │   ├── prisma/           # Prisma schema & seed script
 │   └── tests/            # Integration & unit test suites
-├── docs/                 # Architectural, engineering, auth, catalog, watchlist, reviews & search docs
+├── docs/                 # Architectural, engineering, auth, catalog, watchlist, reviews, search & recommendation docs
 ├── docker/               # Container configurations
 ├── scripts/              # Build and utility scripts
 ├── .github/workflows/    # CI/CD workflows
