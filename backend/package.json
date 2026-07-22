@@ -1,7 +1,7 @@
 {
   "name": "streamhub-backend",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
@@ -9,6 +9,9 @@
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "test": "vitest run"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",

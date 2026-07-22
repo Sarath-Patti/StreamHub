@@ -12,6 +12,11 @@ enum Role {
   ADMIN
 }
 
+enum ContentType {
+  MOVIE
+  SERIES
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -20,4 +25,57 @@ model User {
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Content {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  type        ContentType
+  releaseYear Int
+  duration    Int?
+  language    String
+  rating      Float?
+  posterUrl   String?
+  bannerUrl   String?
+  isTrending  Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  genres      Genre[]     @relation("ContentGenres")
+  seasons     Season[]
+}
+
+model Genre {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  contents  Content[] @relation("ContentGenres")
+}
+
+model Season {
+  id           String    @id @default(uuid())
+  seasonNumber Int
+  title        String?
+  description  String?
+  contentId    String
+  content      Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  episodes     Episode[]
+}
+
+model Episode {
+  id            String   @id @default(uuid())
+  episodeNumber Int
+  title         String
+  description   String?
+  duration      Int
+  seasonId      String
+  season        Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

@@ -2,18 +2,19 @@
 
 Production-ready foundation for a modern full-stack streaming platform.
 
-## Architecture & Authentication
+## Architecture & Modules
 
-StreamHub features a clean modular architecture and robust authentication system:
+StreamHub features a clean modular architecture:
 
-- **Modular Architecture**: Feature modules encapsulated under `backend/src/modules/` (`auth`, etc.).
-- **Authentication**: JWT access and refresh token authentication with bcrypt password hashing.
+- **Authentication Module**: JWT access and refresh token authentication with bcrypt password hashing.
+- **Content Catalog Module**: Comprehensive catalog management for Movies, TV Series, Seasons, Episodes, and Genres with pagination, search, and trending filters.
 - **Structured Logging**: Powered by Pino with request ID tracing.
 - **Environment & Input Validation**: Powered by Zod with fail-fast startup checks.
 - **Centralized Error System**: Standardized application error hierarchy and sanitized GraphQL error responses.
 - **Testing Infrastructure**: Configured with Vitest for unit and integration testing.
 
 For detailed documentation, see:
+- [docs/catalog.md](docs/catalog.md)
 - [docs/authentication.md](docs/authentication.md)
 - [docs/engineering.md](docs/engineering.md)
 - [docs/architecture.md](docs/architecture.md)
@@ -52,6 +53,13 @@ npm install
 npm run dev
 ```
 
+#### Seed Database
+
+```bash
+cd backend
+npx prisma db seed
+```
+
 ## Project Structure
 
 ```
@@ -61,11 +69,12 @@ streamhub/
 │   ├── src/
 │   │   ├── config/       # Configuration & env validation
 │   │   ├── graphql/      # GraphQL context & resolvers
-│   │   ├── modules/      # Domain modules (auth, etc.)
+│   │   ├── modules/      # Domain modules (auth, catalog, etc.)
 │   │   ├── shared/       # Single source of truth for reusable infrastructure
 │   │   └── server.ts     # Express/Apollo server startup
+│   ├── prisma/           # Prisma schema & seed script
 │   └── tests/            # Integration & unit test suites
-├── docs/                 # Architectural, engineering & auth documentation
+├── docs/                 # Architectural, engineering, auth & catalog documentation
 ├── docker/               # Container configurations
 ├── scripts/              # Build and utility scripts
 ├── .github/workflows/    # CI/CD workflows

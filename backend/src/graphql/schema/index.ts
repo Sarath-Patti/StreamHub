@@ -1,4 +1,5 @@
 import { authTypeDefs } from '@/modules/auth/graphql/typeDefs';
+import { catalogTypeDefs } from '@/modules/catalog/graphql/typeDefs';
 
 const baseTypeDefs = `#graphql
   type Query {
@@ -10,4 +11,4 @@ const baseTypeDefs = `#graphql
   }
 `;
 
-export const typeDefs = [baseTypeDefs, authTypeDefs];
+export const typeDefs = [baseTypeDefs, authTypeDefs, catalogTypeDefs];
