@@ -1,6 +1,6 @@
 # StreamHub Engineering Foundation
 
-This document details the engineering principles, infrastructure, and standards established across milestones v0.2, v0.3, and v0.4.
+This document details the engineering principles, infrastructure, and standards established across milestones v0.2 through v0.5.
 
 ## Backend Organization
 
@@ -15,11 +15,12 @@ backend/src/
 │   └── schema/      # Consolidated schema definitions
 ├── modules/         # Domain feature modules
 │   ├── auth/        # Authentication feature module
-│   └── catalog/     # Content Catalog feature module
-│       ├── graphql/    # Catalog schema definitions and resolvers
-│       ├── repository/ # Data access layer for Content, Genre, Season, Episode
-│       ├── service/    # Business logic, pagination, search & filtering
-│       ├── types/      # Catalog DTOs & TypeScript types
+│   ├── catalog/     # Content Catalog feature module
+│   └── watchlist/   # User Watchlist feature module
+│       ├── graphql/    # Watchlist schema definitions and resolvers
+│       ├── repository/ # Data access layer for Watchlist model
+│       ├── service/    # Business logic, duplicate prevention & pagination
+│       ├── types/      # Watchlist DTOs & TypeScript types
 │       └── validation/ # Zod validation schemas
 ├── routes/          # Express route handlers (e.g. health)
 ├── shared/          # Single source of truth for reusable infrastructure
@@ -42,8 +43,10 @@ tests/
 ├── integration/
 │   ├── auth/       # Authentication integration tests
 │   ├── catalog/    # Catalog GraphQL integration tests
-│   └── health/     # Health check smoke tests
+│   ├── health/     # Health check smoke tests
+│   └── watchlist/  # Watchlist integration & authorization tests
 └── unit/
     ├── auth/       # Unit tests for password hashing, tokens, and services
-    └── catalog/    # Unit tests for catalog service & pagination
+    ├── catalog/    # Unit tests for catalog service & pagination
+    └── watchlist/  # Unit tests for watchlist service & duplicate prevention
 ```
