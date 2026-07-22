@@ -28,6 +28,8 @@ model User {
 
   watchlists Watchlist[]
   reviews    Review[]
+
+  @@index([role])
 }
 
 model Content {
@@ -51,6 +53,14 @@ model Content {
   seasons     Season[]
   watchlists  Watchlist[]
   reviews     Review[]
+
+  @@index([title])
+  @@index([type])
+  @@index([releaseYear])
+  @@index([rating])
+  @@index([isTrending])
+  @@index([isDeleted])
+  @@index([createdAt])
 }
 
 model Genre {
@@ -73,6 +83,8 @@ model Season {
   updatedAt    DateTime  @updatedAt
 
   episodes     Episode[]
+
+  @@index([contentId])
 }
 
 model Episode {
@@ -85,6 +97,8 @@ model Episode {
   season        Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  @@index([seasonId])
 }
 
 model Watchlist {
@@ -97,6 +111,8 @@ model Watchlist {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, contentId])
+  @@index([userId])
+  @@index([contentId])
 }
 
 model Review {
@@ -113,4 +129,8 @@ model Review {
   updatedAt  DateTime @updatedAt
 
   @@unique([userId, contentId])
+  @@index([userId])
+  @@index([contentId])
+  @@index([rating])
+  @@index([createdAt])
 }

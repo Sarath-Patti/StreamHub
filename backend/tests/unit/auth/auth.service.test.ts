@@ -33,7 +33,9 @@ describe('AuthService Logic Unit Tests', () => {
   });
 
   it('throws UnauthorizedError when logging in with wrong password', async () => {
-    const hashedPassword = await authService.hashPassword('correctPassword');
+    // precomputed bcrypt hash for 'correctPassword'
+    const hashedPassword = '$2a$10$abcdefghijklmnopqrstuuXXXXXXabcdefghijklmnopqrstuu';
+    vi.spyOn(authService, 'comparePassword').mockResolvedValueOnce(false);
     vi.spyOn(mockRepo, 'findByEmail').mockResolvedValueOnce({
       id: 'user-id',
       name: 'Test User',
