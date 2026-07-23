@@ -18,6 +18,7 @@ export const Navbar: React.FC = () => {
       ? [
           { to: '/discover', label: 'Discover' },
           { to: '/collections', label: 'Collections' },
+          { to: '/analytics', label: 'Analytics' },
         ]
       : []),
   ];

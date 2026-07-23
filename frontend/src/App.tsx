@@ -13,6 +13,7 @@ import Discover from '@/pages/Discover';
 import ContentDetails from '@/pages/ContentDetails';
 import Collections from '@/pages/Collections';
 import CollectionDetails from '@/pages/CollectionDetails';
+import Analytics from '@/pages/Analytics';
 
 const App: React.FC = () => (
   <ApolloProvider client={apolloClient}>
@@ -51,6 +52,14 @@ const App: React.FC = () => (
                 element={
                   <ProtectedRoute>
                     <CollectionDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="analytics"
+                element={
+                  <ProtectedRoute>
+                    <Analytics />
                   </ProtectedRoute>
                 }
               />

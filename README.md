@@ -3,7 +3,7 @@
 Production-ready, high-performance **Content Intelligence & Discovery Platform** built with React 19, Vite, TypeScript, Express, Apollo Server (GraphQL), Prisma ORM, and PostgreSQL.
 
 [![CI Workflow](https://github.com/Sarath-Patti/StreamHub/actions/workflows/ci.yml/badge.svg)](https://github.com/Sarath-Patti/StreamHub/actions/workflows/ci.yml)
-[![Version: 1.5.0](https://img.shields.io/badge/Version-v1.5.0-blue.svg)](CHANGELOG.md)
+[![Version: 1.6.0](https://img.shields.io/badge/Version-v1.6.0-blue.svg)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -59,7 +59,7 @@ npm run clean      # Cleans node_modules and build artifacts
 
 ## System Architecture
 
-StreamHub decouples recommendation strategy evaluation and collection workspace services from React components through an extensible service registry architecture:
+StreamHub isolates analytics data aggregation, recommendation strategy evaluation, and workspace collections into modular service layers:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -71,17 +71,18 @@ StreamHub decouples recommendation strategy evaluation and collection workspace 
 ┌────────────────────────────────────────────────────────────────────────┐
 │                             GraphQL Layer                              │
 │                    (Apollo Client + Type Policies)                     │
-└─────────┬────────────────────────────────────────────────────┬─────────┘
-          │                                                    │
-          ▼                                                    ▼
-┌───────────────────────────────────┐        ┌───────────────────────────┐
-│       Recommendation Engine       │        │    Collection Service     │
-│   (Strategy + Registry Pattern)   │        │(Workspace & Sync Service) │
-└─────────────────┬─────────────────┘        └─────────────┬─────────────┘
-                  │                                        │
-                  └───────────────────┬────────────────────┘
-                                      │
-                                      ▼
+└─────────┬─────────────────────────┬──────────────────────────┬─────────┘
+          │                         │                          │
+          ▼                         ▼                          ▼
+┌──────────────────┐    ┌───────────────────────┐    ┌──────────────────┐
+│  Recommendation  │    │  Collection Service   │    │Analytics Service │
+│      Engine      │    │  (Workspace & Sync)   │    │  (Telemetry &    │
+│(Strategy/Registry│    └───────────┬───────────┘    │  Aggregations)   │
+└─────────┬────────┘                │                └─────────┬────────┘
+          │                         │                          │
+          └─────────────────────────┼──────────────────────────┘
+                                    │
+                                    ▼
 ┌────────────────────────────────────────────────────────────────────────┐
 │                             Backend Service                            │
 │           (Node.js + Express + Apollo Server + Prisma ORM)             │
@@ -98,7 +99,8 @@ StreamHub decouples recommendation strategy evaluation and collection workspace 
 
 ## Platform Features
 
-- 🎯 **Explainable Recommendation Engine**: 100-point transparent match scoring breakdown across 5 dimensions (Genre Similarity 40, Rating Weight 25, Popularity 15, Release Recency 10, Content Diversity 10).
+- 📊 **Analytics & Insights Dashboard**: Real-time telemetry (`/analytics`) visualizing collection statistics, genre distribution, format breakdown, and activity audit logs.
+- 🎯 **Explainable Recommendation Engine**: 100-point transparent match scoring breakdown across 5 dimensions (Genre Similarity 40, Rating Weight 25, Popularity 15, Recency 10, Diversity 10).
 - 🧩 **Pluggable Strategy Selector**: Instant algorithm switching (`Hybrid`, `Genre Similarity`, `Trending`, `Hidden Gems`, `Critics' Choice`) without page refreshes.
 - 📊 **Algorithm Comparator**: Side-by-side strategy score comparison tool evaluating content against all registered algorithms.
 - 📚 **Personal Collections Workspace**: Custom collection management (`/collections`, `/collections/:id`) with inline collection creation, search filtering, and item management.
@@ -110,17 +112,20 @@ StreamHub decouples recommendation strategy evaluation and collection workspace 
 
 ## Engineering Highlights
 
-### 1. Strategy Pattern & Dynamic Strategy Registry
+### 1. Analytics Aggregation & Telemetry Engine
+The `AnalyticsService` and `AnalyticsAggregator` process real-time events (`AnalyticsEvent`), calculate genre taxonomy share, format ratios, and collection size dynamics.
+
+### 2. Service Calculation Memoization
+Expensive calculations (genre frequency distribution, recommendation score confidence indexes) are memoized inside `AnalyticsService` and `RecommendationService` caches to prevent redundant rerenders.
+
+### 3. Strategy Pattern & Dynamic Strategy Registry
 Recommendation algorithms are structured using the Strategy Pattern (`RecommendationStrategy`). The `RecommendationRegistry` allows new algorithms to be registered dynamically at runtime with zero modification to existing codebase logic.
 
-### 2. Decoupled Service Layer
-All business logic, score calculations, strategy evaluation, and collection state persistence are completely isolated inside `RecommendationService` and `CollectionService`. React components consume these capabilities through clean custom hooks (`useCollections`, `useCollection`).
+### 4. Decoupled Service-Layer Architecture
+All business logic, score calculations, strategy evaluation, collection state, and analytics summaries are completely isolated from React components in dedicated service modules (`AnalyticsService`, `RecommendationService`, `CollectionService`).
 
-### 3. Apollo Client & Reactive State Synchronization
+### 5. Apollo Client & Reactive State Synchronization
 Apollo Client `InMemoryCache` typePolicies manage cache identity for `Content`, `Genre`, and `Watchlist` entities. Local collection state updates reactively broadcast to UI components via event subscriptions.
-
-### 4. Explainable AI-Free Recommendation Scoring
-Recommendation explanations are calculated deterministically out of 100 points without AI black boxes or ML overhead, providing transparent checkmark highlights (`✓ Shares 3 genres`, `✓ Community rating above 9`).
 
 ---
 
@@ -129,13 +134,13 @@ Recommendation explanations are calculated deterministically out of 100 points w
 > [!NOTE]
 > Screenshot assets will be placed under `./docs/screenshots/`.
 
-| Discover Workspace | Explainable Recommendation Score |
+| Analytics Dashboard | Discover Workspace |
 |:---:|:---:|
-| ![Discover Page](./docs/screenshots/discover.png) | ![Recommendation Score](./docs/screenshots/intelligence.png) |
+| ![Analytics Dashboard](./docs/screenshots/analytics.png) | ![Discover Page](./docs/screenshots/discover.png) |
 
-| Algorithm Comparator | Personal Collections |
+| Explainable Recommendation Score | Personal Collections |
 |:---:|:---:|
-| ![Algorithm Comparison](./docs/screenshots/compare.png) | ![Personal Collections](./docs/screenshots/collections.png) |
+| ![Recommendation Score](./docs/screenshots/intelligence.png) | ![Personal Collections](./docs/screenshots/collections.png) |
 
 ---
 
@@ -149,6 +154,7 @@ Recommendation explanations are calculated deterministically out of 100 points w
 - [x] **v1.3.0** — Content Intelligence Page (`/content/:id`)
 - [x] **v1.4.0** — Explainable Recommendation Engine & Strategy Registry
 - [x] **v1.5.0** — Personal Collections & Discovery Workspace (`/collections`)
+- [x] **v1.6.0** — Analytics & Insights Dashboard (`/analytics`)
 
 ---
 
@@ -168,12 +174,12 @@ StreamHub/
 │   └── package.json
 ├── frontend/
 │   ├── src/
-│   │   ├── components/ (auth, collections, discover, intelligence, ui)
+│   │   ├── components/ (analytics, auth, collections, discover, intelligence, ui)
 │   │   ├── graphql/ (client, auth, content, discover, watchlist)
-│   │   ├── hooks/ (useAuth, useCollections, useCollection)
+│   │   ├── hooks/ (useAnalytics, useAuth, useCollections, useCollection)
 │   │   ├── layouts/ (Navbar, RootLayout)
-│   │   ├── pages/ (Home, Login, Register, Discover, ContentDetails, Collections, CollectionDetails)
-│   │   ├── services/ (recommendation, collection)
+│   │   ├── pages/ (Analytics, CollectionDetails, Collections, ContentDetails, Discover, Home, Login, Register)
+│   │   ├── services/ (analytics, collection, recommendation)
 │   │   ├── types/
 │   │   └── App.tsx
 │   └── package.json
