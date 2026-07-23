@@ -3,10 +3,6 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button, Badge } from '@/components/ui';
 
-const NAV_LINKS = [
-  { to: '/', label: 'Home' },
-] as const;
-
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
@@ -15,6 +11,11 @@ export const Navbar: React.FC = () => {
     await logout();
     navigate('/login');
   };
+
+  const navLinks = [
+    { to: '/', label: 'Home' },
+    ...(isAuthenticated ? [{ to: '/discover', label: 'Discover' }] : []),
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-surface-700/60 bg-surface-900/80 backdrop-blur-md">
@@ -35,7 +36,7 @@ export const Navbar: React.FC = () => {
 
         {/* Nav links */}
         <nav aria-label="Main navigation" className="hidden sm:flex items-center gap-1">
-          {NAV_LINKS.map(({ to, label }) => (
+          {navLinks.map(({ to, label }) => (
             <NavLink
               key={to}
               to={to}

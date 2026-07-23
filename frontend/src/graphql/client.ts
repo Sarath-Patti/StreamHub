@@ -27,7 +27,19 @@ const httpLink = new HttpLink({ uri: GRAPHQL_URL });
 
 export const apolloClient = new ApolloClient({
   link: from([authLink, httpLink]),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Content: {
+        keyFields: ['id'],
+      },
+      Genre: {
+        keyFields: ['id'],
+      },
+      SearchResponse: {
+        merge: true,
+      },
+    },
+  }),
   defaultOptions: {
     watchQuery: { fetchPolicy: 'cache-and-network' },
     query:      { fetchPolicy: 'cache-first' },
