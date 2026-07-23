@@ -3,12 +3,13 @@ import type { RecommendationStrategy } from './RecommendationStrategy';
 import type { StrategyResult } from './types';
 
 export class GenreSimilarityStrategy implements RecommendationStrategy {
+  readonly id = 'genre';
   readonly name = 'Genre Similarity';
+  readonly description = 'Prioritizes titles with maximum shared genre tags and category overlap.';
   readonly maxScore = 40;
 
   evaluate(target: Content, candidate?: Content): StrategyResult {
     if (!candidate) {
-      // Standalone evaluation of target's rich genre profile
       const genreCount = target.genres.length;
       const score = Math.min(this.maxScore, Math.max(20, genreCount * 12));
       const genreList = target.genres.map((g) => g.name).join(', ');
@@ -30,7 +31,6 @@ export class GenreSimilarityStrategy implements RecommendationStrategy {
       };
     }
 
-    // Pairwise comparison between target and candidate
     const targetGenres = new Set(target.genres.map((g) => g.id.toLowerCase()));
     const candidateGenres = candidate.genres.map((g) => g.id.toLowerCase());
 
@@ -44,7 +44,7 @@ export class GenreSimilarityStrategy implements RecommendationStrategy {
 
     const explanation =
       sharedNames.length > 0
-        ? `Shares ${sharedNames.join(', ')} genre tags with ${target.title}`
+        ? `Shares ${sharedNames.length} genre${sharedNames.length > 1 ? 's' : ''} (${sharedNames.join(', ')})`
         : `Complements ${target.title} with alternative genre categories`;
 
     return {

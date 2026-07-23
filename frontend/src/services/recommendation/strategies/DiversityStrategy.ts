@@ -3,7 +3,9 @@ import type { RecommendationStrategy } from './RecommendationStrategy';
 import type { StrategyResult } from './types';
 
 export class DiversityStrategy implements RecommendationStrategy {
+  readonly id = 'diversity';
   readonly name = 'Content Diversity';
+  readonly description = 'Scores content format, runtime balance, and language compatibility.';
   readonly maxScore = 10;
 
   evaluate(target: Content, candidate?: Content): StrategyResult {
@@ -15,10 +17,9 @@ export class DiversityStrategy implements RecommendationStrategy {
     }
 
     const typeStr = subject.type === 'MOVIE' ? 'Feature Film' : 'TV Series';
-    const langStr = subject.language;
-    const durationStr = subject.duration ? `${subject.duration} minutes` : 'Episodic format';
+    const durationStr = subject.duration ? `${subject.duration} min` : 'Episodic';
 
-    const explanation = `Matches your preference for ${langStr} ${typeStr.toLowerCase()}s (${durationStr})`;
+    const explanation = `Similar runtime and format (${durationStr}, ${typeStr})`;
 
     return {
       score,
@@ -28,7 +29,7 @@ export class DiversityStrategy implements RecommendationStrategy {
           name: this.name,
           score,
           maxScore: this.maxScore,
-          description: `${typeStr} in ${langStr} format.`,
+          description: `${typeStr} in ${subject.language} format (${durationStr}).`,
         },
       ],
       explanations: [explanation],

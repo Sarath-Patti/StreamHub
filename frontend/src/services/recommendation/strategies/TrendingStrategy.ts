@@ -3,21 +3,23 @@ import type { RecommendationStrategy } from './RecommendationStrategy';
 import type { StrategyResult } from './types';
 
 export class TrendingStrategy implements RecommendationStrategy {
-  readonly name = 'Popularity';
+  readonly id = 'trending';
+  readonly name = 'Trending';
+  readonly description = 'Highlights titles with high active viewer engagement and trending momentum.';
   readonly maxScore = 15;
 
   evaluate(target: Content, candidate?: Content): StrategyResult {
     const subject = candidate || target;
 
-    let score = 10; // Baseline popularity
+    let score = 8;
     if (subject.isTrending) {
       score = 15;
     }
 
-    const firstGenre = subject.genres[0]?.name || 'the platform';
+    const firstGenre = subject.genres[0]?.name || 'popular';
     const explanation = subject.isTrending
-      ? `Currently trending among top picks in ${firstGenre}`
-      : `Frequently discovered by viewers exploring ${firstGenre}`;
+      ? `Trending among ${firstGenre} titles`
+      : `Popular choice in the ${firstGenre} category`;
 
     return {
       score,
@@ -28,8 +30,8 @@ export class TrendingStrategy implements RecommendationStrategy {
           score,
           maxScore: this.maxScore,
           description: subject.isTrending
-            ? 'Flagged as trending in global discovery.'
-            : 'Standard discovery catalog engagement.',
+            ? 'Active trending status on StreamHub.'
+            : 'Standard catalog engagement.',
         },
       ],
       explanations: [explanation],

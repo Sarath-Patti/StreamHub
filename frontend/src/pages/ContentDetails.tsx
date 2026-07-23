@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import type { Content } from '@/types';
@@ -11,6 +11,7 @@ import { Badge, Button, Spinner } from '@/components/ui';
 
 export const ContentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [selectedStrategyId, setSelectedStrategyId] = useState<string>('hybrid');
 
   // Fetch target content details
   const {
@@ -34,18 +35,18 @@ export const ContentDetails: React.FC = () => {
 
   const content = contentData?.content;
 
-  // Deterministically compute match score & explanations for the target content using RecommendationService
+  // Deterministically compute match score & explanations for target content using active strategy
   const targetMatchResult = useMemo(() => {
     if (!content) return null;
-    return recommendationService.computeRecommendationScore(content);
-  }, [content]);
+    return recommendationService.computeRecommendationScore(content, undefined, selectedStrategyId);
+  }, [content, selectedStrategyId]);
 
-  // Deterministically rank candidate similar content using RecommendationService (Strategy Pattern)
+  // Deterministically rank candidate similar content using active strategy (Strategy Pattern)
   const rankedRecommendedNext = useMemo(() => {
     const candidates = similarData?.similarContent?.items || [];
     if (!content || candidates.length === 0) return [];
-    return recommendationService.rankSimilarContent(content, candidates);
-  }, [content, similarData]);
+    return recommendationService.rankSimilarContent(content, candidates, selectedStrategyId);
+  }, [content, similarData, selectedStrategyId]);
 
   if (contentLoading) {
     return (
@@ -186,10 +187,13 @@ export const ContentDetails: React.FC = () => {
         </section>
       )}
 
-      {/* Recommended Next Section */}
+      {/* Recommended Next Section with Strategy Selector */}
       <section>
         <RecommendedNext
+          targetContent={content}
           rankedItems={rankedRecommendedNext}
+          selectedStrategyId={selectedStrategyId}
+          onStrategyChange={setSelectedStrategyId}
           loading={similarLoading}
         />
       </section>

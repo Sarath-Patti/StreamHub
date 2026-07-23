@@ -8,7 +8,9 @@ import { RecencyStrategy } from './RecencyStrategy';
 import { DiversityStrategy } from './DiversityStrategy';
 
 export class HybridStrategy implements RecommendationStrategy {
-  readonly name = 'Hybrid Recommendation Strategy';
+  readonly id = 'hybrid';
+  readonly name = 'Hybrid (Default)';
+  readonly description = 'Weighted balance of genre similarity, rating, trending status, recency, and format.';
   readonly maxScore = 100;
 
   private strategies: RecommendationStrategy[];
@@ -37,7 +39,6 @@ export class HybridStrategy implements RecommendationStrategy {
       allExplanations.push(...res.explanations);
     }
 
-    // Scale to maxScore (100) if totalMax happens to differ
     const normalizedScore = totalMax > 0 ? Math.round((totalScore / totalMax) * this.maxScore) : 0;
 
     return {
