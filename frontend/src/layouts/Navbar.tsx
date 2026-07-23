@@ -17,6 +17,7 @@ export const Navbar: React.FC = () => {
     ...(isAuthenticated
       ? [
           { to: '/discover', label: 'Discover' },
+          { to: '/search', label: 'Search' },
           { to: '/collections', label: 'Collections' },
           { to: '/analytics', label: 'Analytics' },
         ]

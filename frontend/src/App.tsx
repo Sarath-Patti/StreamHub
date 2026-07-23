@@ -14,6 +14,7 @@ import ContentDetails from '@/pages/ContentDetails';
 import Collections from '@/pages/Collections';
 import CollectionDetails from '@/pages/CollectionDetails';
 import Analytics from '@/pages/Analytics';
+import SearchDashboard from '@/pages/SearchDashboard';
 
 const App: React.FC = () => (
   <ApolloProvider client={apolloClient}>
@@ -28,6 +29,14 @@ const App: React.FC = () => (
                 element={
                   <ProtectedRoute>
                     <Discover />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="search"
+                element={
+                  <ProtectedRoute>
+                    <SearchDashboard />
                   </ProtectedRoute>
                 }
               />
