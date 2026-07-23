@@ -41,6 +41,14 @@ export const CreateEditCollectionModal: React.FC<CreateEditCollectionModalProps>
     setError(null);
   }, [collectionToEdit, isOpen]);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,6 +69,9 @@ export const CreateEditCollectionModal: React.FC<CreateEditCollectionModalProps>
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-edit-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >

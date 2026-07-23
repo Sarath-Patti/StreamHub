@@ -68,7 +68,7 @@ jobs:
         run: npm run test
 
   frontend-ci:
-    name: Frontend CI (Lint & Build)
+    name: Frontend CI (Lint, Build, Test)
     runs-on: ubuntu-latest
 
     steps:
@@ -93,3 +93,7 @@ jobs:
       - name: Build Frontend
         working-directory: ./frontend
         run: npm run build
+
+      - name: Test Frontend
+        working-directory: ./frontend
+        run: npm run test

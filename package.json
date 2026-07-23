@@ -1,13 +1,38 @@
 {
   "name": "streamhub-monorepo",
   "private": true,
-  "version": "1.0.1",
-  "description": "StreamHub Monorepo - Modern Full-Stack Video Streaming Architecture",
+  "version": "2.0.0",
+  "description": "Production-ready, high-performance Content Intelligence & Discovery Platform built with React 19, Vite, TypeScript, Express, Apollo Server (GraphQL), Prisma ORM, and PostgreSQL.",
+  "author": "Sarath Patti",
+  "license": "MIT",
+  "homepage": "https://github.com/Sarath-Patti/StreamHub#readme",
+  "bugs": {
+    "url": "https://github.com/Sarath-Patti/StreamHub/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sarath-Patti/StreamHub.git"
+  },
+  "keywords": [
+    "content-intelligence",
+    "recommendation-engine",
+    "graphql",
+    "apollo-server",
+    "react19",
+    "vite",
+    "typescript",
+    "express",
+    "prisma",
+    "postgresql",
+    "strategy-pattern",
+    "analytics-dashboard",
+    "search-engine"
+  ],
   "scripts": {
     "setup": "sh scripts/setup-db.sh && cd backend && npx prisma generate && npx prisma db push --accept-data-loss && npx prisma db seed",
     "dev": "npx -y concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
     "build": "npm run build --prefix backend && npm run build --prefix frontend",
-    "test": "npm run test --prefix backend",
+    "test": "npm run test --prefix backend && npm run test --prefix frontend",
     "lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
     "docker": "docker compose up --build",
     "clean": "rm -rf node_modules backend/node_modules backend/dist frontend/node_modules frontend/dist"

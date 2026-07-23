@@ -12,10 +12,21 @@ export const SearchResultExplanationModal: React.FC<SearchResultExplanationModal
   item,
   onClose,
 }) => {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const { content, searchScore, explanation } = item;
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="search-result-explanation-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >

@@ -14,11 +14,22 @@ export const CompareAlgorithmsModal: React.FC<CompareAlgorithmsModalProps> = ({
   candidate,
   onClose,
 }) => {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const comparisons = recommendationService.compareAlgorithms(target, candidate);
   const subjectTitle = candidate ? candidate.title : target.title;
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="compare-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >

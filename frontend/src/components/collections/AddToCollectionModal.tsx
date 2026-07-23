@@ -26,6 +26,14 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
   const [addToWatchlistMutation] = useMutation(ADD_TO_WATCHLIST);
   const [removeFromWatchlistMutation] = useMutation(REMOVE_FROM_WATCHLIST);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   const handleToggleCollection = async (collectionId: string) => {
@@ -69,6 +77,9 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="add-to-collection-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >

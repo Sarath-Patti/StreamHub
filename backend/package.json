@@ -1,8 +1,19 @@
 {
   "name": "streamhub-backend",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "StreamHub Backend API - Express, Apollo Server 4, Prisma ORM, and PostgreSQL",
   "main": "dist/index.js",
+  "author": "Sarath Patti",
+  "license": "MIT",
+  "homepage": "https://github.com/Sarath-Patti/StreamHub#readme",
+  "bugs": {
+    "url": "https://github.com/Sarath-Patti/StreamHub/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sarath-Patti/StreamHub.git"
+  },
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/index.ts",
     "build": "tsc",
