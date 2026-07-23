@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Content } from '@/types';
 import { Badge } from '@/components/ui';
 
@@ -14,10 +15,11 @@ export const MovieCard: React.FC<MovieCardProps> = ({ content, className = '' })
   const isMovie = content.type === 'MOVIE';
 
   return (
-    <div
+    <Link
+      to={`/content/${content.id}`}
       className={[
         'group relative flex flex-col overflow-hidden rounded-xl bg-surface-800 border border-surface-700/60 shadow-md',
-        'transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-brand-500/10 hover:border-brand-500/40',
+        'transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-brand-500/10 hover:border-brand-500/40 focus:outline-none focus:ring-2 focus:ring-brand-400',
         className,
       ].join(' ')}
     >
@@ -103,6 +105,6 @@ export const MovieCard: React.FC<MovieCardProps> = ({ content, className = '' })
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

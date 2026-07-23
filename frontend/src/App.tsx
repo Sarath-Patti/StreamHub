@@ -10,6 +10,7 @@ import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Discover from '@/pages/Discover';
+import ContentDetails from '@/pages/ContentDetails';
 
 const App: React.FC = () => (
   <ApolloProvider client={apolloClient}>
@@ -24,6 +25,14 @@ const App: React.FC = () => (
                 element={
                   <ProtectedRoute>
                     <Discover />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="content/:id"
+                element={
+                  <ProtectedRoute>
+                    <ContentDetails />
                   </ProtectedRoute>
                 }
               />
