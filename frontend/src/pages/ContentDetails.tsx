@@ -6,12 +6,14 @@ import { GET_CONTENT_BY_ID, GET_SIMILAR_CONTENT } from '@/graphql/content';
 import { recommendationService } from '@/services/recommendation';
 import { WhyYoullLikeThis } from '@/components/intelligence/WhyYoullLikeThis';
 import { RecommendedNext } from '@/components/intelligence/RecommendedNext';
+import { AddToCollectionModal } from '@/components/collections/AddToCollectionModal';
 import { ErrorState } from '@/components/discover/ErrorState';
 import { Badge, Button, Spinner } from '@/components/ui';
 
 export const ContentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [selectedStrategyId, setSelectedStrategyId] = useState<string>('hybrid');
+  const [isAddToCollectionOpen, setIsAddToCollectionOpen] = useState(false);
 
   // Fetch target content details
   const {
@@ -166,12 +168,15 @@ export const ContentDetails: React.FC = () => {
               {content.description}
             </p>
 
-            <div className="pt-2 flex items-center gap-4">
+            <div className="pt-2 flex flex-wrap items-center gap-4">
               <Button variant="primary" size="lg" onClick={() => alert(`Starting stream playback for "${content.title}"...`)}>
                 ▶ Play Title
               </Button>
+              <Button variant="secondary" size="lg" onClick={() => setIsAddToCollectionOpen(true)}>
+                📚 + Add to Collection
+              </Button>
               <Link to="/discover">
-                <Button variant="secondary" size="lg">
+                <Button variant="ghost" size="lg">
                   ← Back to Discover
                 </Button>
               </Link>
@@ -197,6 +202,15 @@ export const ContentDetails: React.FC = () => {
           loading={similarLoading}
         />
       </section>
+
+      {/* Add To Collection Modal */}
+      {content && (
+        <AddToCollectionModal
+          content={content}
+          isOpen={isAddToCollectionOpen}
+          onClose={() => setIsAddToCollectionOpen(false)}
+        />
+      )}
     </div>
   );
 };

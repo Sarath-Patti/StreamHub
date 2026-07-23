@@ -1,9 +1,12 @@
 # StreamHub
 
-Production-ready, high-performance full-stack video streaming platform foundation.
+Production-ready, high-performance **Content Intelligence & Discovery Platform** built with React 19, Vite, TypeScript, Express, Apollo Server (GraphQL), Prisma ORM, and PostgreSQL.
 
 [![CI Workflow](https://github.com/Sarath-Patti/StreamHub/actions/workflows/ci.yml/badge.svg)](https://github.com/Sarath-Patti/StreamHub/actions/workflows/ci.yml)
+[![Version: 1.5.0](https://img.shields.io/badge/Version-v1.5.0-blue.svg)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+---
 
 ## Quick Start (One Command)
 
@@ -54,75 +57,131 @@ npm run clean      # Cleans node_modules and build artifacts
 
 ---
 
-## Overview
+## System Architecture
 
-StreamHub is a production-grade full-stack video streaming architecture built with React 19, Vite, TypeScript, Express, Apollo Server (GraphQL), Prisma ORM, and PostgreSQL. It features clean modular architecture, security hardening, performance indexing, deterministic recommendation algorithms, and operational readiness.
+StreamHub decouples recommendation strategy evaluation and collection workspace services from React components through an extensible service registry architecture:
 
-## Technology Stack
-
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS, Apollo Client, React Router
-- **Backend**: Node.js (LTS), Express, Apollo Server (GraphQL), Prisma ORM, PostgreSQL
-- **Security & Infrastructure**: Pino structured logging, Zod validation, JWT authentication, sliding-window rate limiting, security headers, Vitest
-- **Deployment**: Docker, Docker Compose, GitHub Actions CI/CD
-
-## Architecture & Modules
-
-- **Authentication Module**: JWT access and refresh token authentication with bcrypt password hashing.
-- **Content Catalog Module**: Movies, TV Series, Seasons, Episodes, and Genres management with pagination and trending flags.
-- **Watchlist Module**: Personal watchlist management with database-level duplicate prevention (`@@unique([userId, contentId])`).
-- **Reviews & Ratings Module**: 1–5 star ratings, review text, average rating calculation, and star distribution metrics.
-- **Search & Discovery Module**: Multi-criteria search, filtering (genre, type, language, year, min rating), sorting, and pagination metadata.
-- **Recommendation Engine Module**: Deterministic recommendation strategies (Similar Content, Popular Content, Weighted Trending, Top Rated with minimum reviews, and Continue Discovering).
-- **Platform Administration Module**: RBAC protection (`USER` vs `ADMIN`), soft-delete lifecycle, bulk operations, review moderation, and platform analytics dashboard.
-
-For detailed architecture docs, see:
-- [docs/architecture.md](docs/architecture.md)
-- [docs/engineering.md](docs/engineering.md)
-- [docs/admin.md](docs/admin.md)
-- [docs/recommendations.md](docs/recommendations.md)
-- [docs/search.md](docs/search.md)
-- [docs/reviews.md](docs/reviews.md)
-- [docs/watchlist.md](docs/watchlist.md)
-- [docs/catalog.md](docs/catalog.md)
-- [docs/authentication.md](docs/authentication.md)
-- [CHANGELOG.md](CHANGELOG.md)
-
-## Example GraphQL API Operations
-
-### Search & Discover Content
-```graphql
-query DiscoverSciFi {
-  discover(input: {
-    type: MOVIE
-    genre: "Sci-Fi"
-    minimumRating: 8.0
-    page: 1
-    limit: 10
-  }) {
-    totalCount
-    totalPages
-    results {
-      id
-      title
-      rating
-      releaseYear
-    }
-  }
-}
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                          StreamHub Web App                             │
+│                         (React 19 + Vite)                              │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                             GraphQL Layer                              │
+│                    (Apollo Client + Type Policies)                     │
+└─────────┬────────────────────────────────────────────────────┬─────────┘
+          │                                                    │
+          ▼                                                    ▼
+┌───────────────────────────────────┐        ┌───────────────────────────┐
+│       Recommendation Engine       │        │    Collection Service     │
+│   (Strategy + Registry Pattern)   │        │(Workspace & Sync Service) │
+└─────────────────┬─────────────────┘        └─────────────┬─────────────┘
+                  │                                        │
+                  └───────────────────┬────────────────────┘
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                             Backend Service                            │
+│           (Node.js + Express + Apollo Server + Prisma ORM)             │
+└─────────────────────────────────────┬──────────────────────────────────┘
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                           PostgreSQL Database                          │
+│               (Database Indexes + Hardened Constraints)                │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Add to Watchlist
-```graphql
-mutation AddMovieToWatchlist {
-  addToWatchlist(contentId: "content-uuid-123") {
-    id
-    createdAt
-    content {
-      title
-    }
-  }
-}
+---
+
+## Platform Features
+
+- 🎯 **Explainable Recommendation Engine**: 100-point transparent match scoring breakdown across 5 dimensions (Genre Similarity 40, Rating Weight 25, Popularity 15, Release Recency 10, Content Diversity 10).
+- 🧩 **Pluggable Strategy Selector**: Instant algorithm switching (`Hybrid`, `Genre Similarity`, `Trending`, `Hidden Gems`, `Critics' Choice`) without page refreshes.
+- 📊 **Algorithm Comparator**: Side-by-side strategy score comparison tool evaluating content against all registered algorithms.
+- 📚 **Personal Collections Workspace**: Custom collection management (`/collections`, `/collections/:id`) with inline collection creation, search filtering, and item management.
+- 🔎 **Rich Discover Experience**: Deep-linking search (`?q=`), genre filtering chips, type switching, sorting, and pagination.
+- 🔒 **Enterprise Authentication**: JWT access and refresh token flow with sliding-window protection and automatic Apollo client authorization.
+- ⚡ **Database & Backend Hardening**: Custom Prisma composite indexes (`@@index([title, releaseYear])`, `@@index([rating])`), rate limiting, structured logging, health probes.
+
+---
+
+## Engineering Highlights
+
+### 1. Strategy Pattern & Dynamic Strategy Registry
+Recommendation algorithms are structured using the Strategy Pattern (`RecommendationStrategy`). The `RecommendationRegistry` allows new algorithms to be registered dynamically at runtime with zero modification to existing codebase logic.
+
+### 2. Decoupled Service Layer
+All business logic, score calculations, strategy evaluation, and collection state persistence are completely isolated inside `RecommendationService` and `CollectionService`. React components consume these capabilities through clean custom hooks (`useCollections`, `useCollection`).
+
+### 3. Apollo Client & Reactive State Synchronization
+Apollo Client `InMemoryCache` typePolicies manage cache identity for `Content`, `Genre`, and `Watchlist` entities. Local collection state updates reactively broadcast to UI components via event subscriptions.
+
+### 4. Explainable AI-Free Recommendation Scoring
+Recommendation explanations are calculated deterministically out of 100 points without AI black boxes or ML overhead, providing transparent checkmark highlights (`✓ Shares 3 genres`, `✓ Community rating above 9`).
+
+---
+
+## Screenshots Placeholder
+
+> [!NOTE]
+> Screenshot assets will be placed under `./docs/screenshots/`.
+
+| Discover Workspace | Explainable Recommendation Score |
+|:---:|:---:|
+| ![Discover Page](./docs/screenshots/discover.png) | ![Recommendation Score](./docs/screenshots/intelligence.png) |
+
+| Algorithm Comparator | Personal Collections |
+|:---:|:---:|
+| ![Algorithm Comparison](./docs/screenshots/compare.png) | ![Personal Collections](./docs/screenshots/collections.png) |
+
+---
+
+## Milestone Roadmap
+
+- [x] **v1.0.0** — Monolithic Backend, Security Hardening, Database Indexing & Operational Readiness
+- [x] **v1.0.1** — One-Command Docker Startup & Developer Experience Update
+- [x] **v1.1.0** — Frontend Architecture Foundation (React 19 + Vite + Tailwind + Apollo Client)
+- [x] **v1.2.0** — Discover Experience & Deep-linked Filtering
+- [x] **v1.2.1** — Seed Data Expansion (40 catalog items across 10 genres)
+- [x] **v1.3.0** — Content Intelligence Page (`/content/:id`)
+- [x] **v1.4.0** — Explainable Recommendation Engine & Strategy Registry
+- [x] **v1.5.0** — Personal Collections & Discovery Workspace (`/collections`)
+
+---
+
+## Repository Structure
+
 ```
+StreamHub/
+├── backend/
+│   ├── prisma/
+│   │   ├── migrations/
+│   │   └── seed.ts
+│   ├── src/
+│   │   ├── config/
+│   │   ├── modules/ (auth, catalog, watchlist, reviews, search, recommendation, admin)
+│   │   ├── shared/
+│   │   └── index.ts
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/ (auth, collections, discover, intelligence, ui)
+│   │   ├── graphql/ (client, auth, content, discover, watchlist)
+│   │   ├── hooks/ (useAuth, useCollections, useCollection)
+│   │   ├── layouts/ (Navbar, RootLayout)
+│   │   ├── pages/ (Home, Login, Register, Discover, ContentDetails, Collections, CollectionDetails)
+│   │   ├── services/ (recommendation, collection)
+│   │   ├── types/
+│   │   └── App.tsx
+│   └── package.json
+├── docker-compose.yml
+└── README.md
+```
+
+---
 
 ## License
 

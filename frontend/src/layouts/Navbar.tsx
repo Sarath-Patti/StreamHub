@@ -14,7 +14,12 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { to: '/', label: 'Home' },
-    ...(isAuthenticated ? [{ to: '/discover', label: 'Discover' }] : []),
+    ...(isAuthenticated
+      ? [
+          { to: '/discover', label: 'Discover' },
+          { to: '/collections', label: 'Collections' },
+        ]
+      : []),
   ];
 
   return (
